@@ -11,7 +11,10 @@ if (process.env.LOAD_ENV) {
   });
 }
 
-export const integrationConfig: IntegrationConfig = {};
+export const integrationConfig: IntegrationConfig = {
+  publicKey: process.env.PUBLIC_KEY || 'dummy-public-key',
+  privateKey: process.env.PRIVATE_KEY || 'dummy-private-key',
+};
 
 export function buildStepTestConfigForStep(stepId: string): StepTestConfig {
   return {
