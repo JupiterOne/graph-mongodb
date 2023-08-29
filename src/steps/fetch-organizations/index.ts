@@ -5,6 +5,8 @@ import {
 
 import { IntegrationConfig } from '../../config';
 import { Steps, Entities } from '../constants';
+import { createAPIClient } from '../../client';
+import { createOrganizationEntity } from './converters';
 
 export const fetchOrganizationsSteps: IntegrationStep<IntegrationConfig>[] = [
   {
@@ -19,6 +21,12 @@ export const fetchOrganizationsSteps: IntegrationStep<IntegrationConfig>[] = [
 
 export async function fetchOrganizations({
   jobState,
+  instance,
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
-  // TODO
+  const { config } = instance;
+  const client = createAPIClient(config);
+
+  await client.fetchOrganizations(async (organization) => {
+    await jobState.addEntity(createOrganizationEntity(organization));
+  });
 }

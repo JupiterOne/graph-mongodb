@@ -1,9 +1,11 @@
 import {
   IntegrationLogger,
+  IntegrationProviderAPIError,
   IntegrationProviderAuthenticationError,
 } from '@jupiterone/integration-sdk-core';
 import { IntegrationConfig } from './config';
 import DigestClient from 'digest-fetch';
+import { Organization } from './types';
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
 
@@ -49,6 +51,32 @@ export class APIClient {
         }
       });
     return Promise.resolve();
+  }
+
+  public async fetchOrganizations(
+    iterator: ResourceIteratee<Organization>,
+  ): Promise<void> {
+    const organizations = await this._wrapWithErrorHandling('/orgs');
+
+    await Promise.all(organizations.results.map(iterator));
+  }
+
+  private async _wrapWithErrorHandling(endpoint: string): Promise<any> {
+    const response = await this._digestClient.fetch(
+      `${this._baseUrl}${endpoint}`,
+      this._requestOptions,
+    );
+    const data = await response.json();
+    if (data.error === 401) {
+      throw new IntegrationProviderAuthenticationError({
+        endpoint: `${this._baseUrl}/${endpoint}`,
+        status: data.error,
+        statusText: data?.detail || data.reason || 'Unauthorized',
+      });
+    } else if (data.error === 400) {
+      // TODO: handle other error types
+    }
+    return data;
   }
 }
 
