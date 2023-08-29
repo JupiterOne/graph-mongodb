@@ -6,18 +6,18 @@ import {
 import { IntegrationConfig } from '../../config';
 import { Steps, Entities } from '../constants';
 
-export const fetchTenantSteps: IntegrationStep<IntegrationConfig>[] = [
+export const fetchOrganizationsSteps: IntegrationStep<IntegrationConfig>[] = [
   {
-    id: Steps.FETCH_TENANT,
-    name: 'Fetch Tenant',
+    id: Steps.FETCH_ORGANIZATIONS,
+    name: 'Fetch Organizations',
     entities: [Entities.ORGANIZATION],
     relationships: [],
     dependsOn: [],
-    executionHandler: fetchTenant,
+    executionHandler: fetchOrganizations,
   },
 ];
 
-export async function fetchTenant({
+export async function fetchOrganizations({
   jobState,
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   // TODO

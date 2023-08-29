@@ -12,7 +12,7 @@ export const fetchTeamsSteps: IntegrationStep<IntegrationConfig>[] = [
     name: 'Fetch Teams',
     entities: [Entities.TEAM],
     relationships: [Relationships.ORGANIZATION_HAS_TEAM],
-    dependsOn: [Steps.FETCH_TENANT],
+    dependsOn: [Steps.FETCH_ORGANIZATIONS],
     executionHandler: fetchTeams,
   },
 ];

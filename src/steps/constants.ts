@@ -5,8 +5,7 @@ import {
 } from '@jupiterone/integration-sdk-core';
 
 export const Steps: Record<
-  // TODO: change tenant to org if needed
-  | 'FETCH_TENANT'
+  | 'FETCH_ORGANIZATIONS'
   | 'FETCH_PROJECTS'
   | 'FETCH_CLUSTERS'
   | 'FETCH_USERS'
@@ -14,8 +13,7 @@ export const Steps: Record<
   | 'FETCH_ROLES',
   string
 > = {
-  // TODO: change tenant to org if needed
-  FETCH_TENANT: 'fetch-tenant',
+  FETCH_ORGANIZATIONS: 'fetch-organizations',
   FETCH_PROJECTS: 'fetch-projects',
   FETCH_CLUSTERS: 'fetch-clusters',
   FETCH_USERS: 'fetch-users',
@@ -29,8 +27,7 @@ export const Entities: Record<
 > = {
   ORGANIZATION: {
     resourceName: 'Organization',
-    // TODO: change tenant to org if needed
-    _type: 'mongodb_tenant',
+    _type: 'mongodb_organization',
     _class: ['Organization'],
   },
   PROJECT: {
@@ -73,22 +70,19 @@ export const Relationships: Record<
   ORGANIZATION_HAS_USER: {
     sourceType: Entities.ORGANIZATION._type,
     targetType: Entities.USER._type,
-    // TODO: change tenant to org if needed
-    _type: 'mongodb_tenant_has_user',
+    _type: 'mongodb_organization_has_user',
     _class: RelationshipClass.HAS,
   },
   ORGANIZATION_HAS_PROJECT: {
     sourceType: Entities.ORGANIZATION._type,
     targetType: Entities.PROJECT._type,
-    // TODO: change tenant to org if needed
-    _type: 'mongodb_tenant_has_project',
+    _type: 'mongodb_organization_has_project',
     _class: RelationshipClass.HAS,
   },
   ORGANIZATION_HAS_TEAM: {
     sourceType: Entities.ORGANIZATION._type,
     targetType: Entities.TEAM._type,
-    // TODO: change tenant to org if needed
-    _type: 'mongodb_tenant_has_team',
+    _type: 'mongodb_organization_has_team',
     _class: RelationshipClass.HAS,
   },
   TEAM_HAS_USER: {

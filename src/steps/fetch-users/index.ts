@@ -16,7 +16,7 @@ export const fetchUsersSteps: IntegrationStep<IntegrationConfig>[] = [
       Relationships.TEAM_HAS_USER,
       Relationships.ROLE_LIMITS_USER,
     ],
-    dependsOn: [Steps.FETCH_TENANT, Steps.FETCH_TEAMS],
+    dependsOn: [Steps.FETCH_ORGANIZATIONS, Steps.FETCH_TEAMS],
     executionHandler: fetchUsers,
   },
 ];
