@@ -39,6 +39,10 @@ describe('#validateInvocation', () => {
     recording = setupProjectRecording({
       directory: __dirname,
       name: 'validate-invocation',
+      options: {
+        // since digest auth first replies with 401, we need to record failed requests in order to save the 200 response
+        recordFailedRequests: true,
+      },
     });
 
     const executionContext = createMockExecutionContext({
@@ -51,7 +55,7 @@ describe('#validateInvocation', () => {
   test('fails validating invocation', async () => {
     recording = setupProjectRecording({
       directory: __dirname,
-      name: 'validate-invocation',
+      name: 'fails-validatating-invocation',
       options: {
         recordFailedRequests: true,
       },
@@ -65,7 +69,7 @@ describe('#validateInvocation', () => {
     });
 
     await expect(validateInvocation(executionContext)).rejects.toThrow(
-      'Provider authentication failed at https://cloud.mongodb.com/api/atlas/v2: 401 Unauthorized',
+      'Provider authentication failed at https://cloud.mongodb.com/api/atlas/v2: 401 You are not authorized for this resource',
     );
   });
 });

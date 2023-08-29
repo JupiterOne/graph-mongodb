@@ -3,7 +3,7 @@ import {
   IntegrationProviderAuthenticationError,
 } from '@jupiterone/integration-sdk-core';
 import { IntegrationConfig } from './config';
-import { RequestOptions, request } from 'urllib';
+import DigestClient from 'digest-fetch';
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
 
@@ -17,28 +17,37 @@ export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
  */
 export class APIClient {
   private _baseUrl: string = 'https://cloud.mongodb.com/api/atlas/v2';
-  private _requestOptions: RequestOptions = {
-    digestAuth: `${this.config.publicKey}:${this.config.privateKey}`,
+  private _requestOptions = {
     headers: {
       Accept: 'application/vnd.atlas.2023-02-01+json',
+      'Content-Type': 'application/json',
     },
-    contentType: 'json',
   };
+  private _digestClient: DigestClient;
 
   constructor(
     readonly config: IntegrationConfig,
     logger?: IntegrationLogger,
-  ) {}
+  ) {
+    this._digestClient = new DigestClient(
+      this.config.publicKey,
+      this.config.privateKey,
+    );
+  }
 
   public async verifyAuthentication(): Promise<void> {
-    const { res } = await request(`${this._baseUrl}`, this._requestOptions);
-    if (res.statusCode !== 200) {
-      throw new IntegrationProviderAuthenticationError({
-        endpoint: `${this._baseUrl}`,
-        status: res.statusCode,
-        statusText: res.statusText,
+    await this._digestClient
+      .fetch(`${this._baseUrl}`, this._requestOptions)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          throw new IntegrationProviderAuthenticationError({
+            endpoint: `${this._baseUrl}`,
+            status: data.error,
+            statusText: data?.detail || 'Unauthorized',
+          });
+        }
       });
-    }
     return Promise.resolve();
   }
 }
