@@ -20,7 +20,7 @@ The following entities are created:
 | Resources    | Entity `_type`    | Entity `_class`     |
 | ------------ | ----------------- | ------------------- |
 | Cluster      | `mongodb_cluster` | `Cluster`           |
-| Organization | `mongodb_tenant`  | `Account`           |
+| Organization | `mongodb_tenant`  | `Organization`      |
 | Project      | `mongodb_project` | `Project`           |
 | Role         | `mongodb_role`    | `AccessRole`        |
 | Team         | `mongodb_team`    | `UserGroup`, `Team` |
@@ -33,10 +33,12 @@ The following relationships are created:
 | Source Entity `_type` | Relationship `_class` | Target Entity `_type` |
 | --------------------- | --------------------- | --------------------- |
 | `mongodb_project`     | **HAS**               | `mongodb_cluster`     |
-| `mongodb_role`        | **HAS**               | `mongodb_project`     |
+| `mongodb_project`     | **HAS**               | `mongodb_role`        |
 | `mongodb_team`        | **HAS**               | `mongodb_user`        |
+| `mongodb_tenant`      | **HAS**               | `mongodb_project`     |
+| `mongodb_tenant`      | **HAS**               | `mongodb_team`        |
 | `mongodb_tenant`      | **HAS**               | `mongodb_user`        |
-| `mongodb_user`        | **HAS**               | `mongodb_role`        |
+| `mongodb_role`        | **LIMITS**            | `mongodb_user`        |
 
 <!--
 ********************************************************************************

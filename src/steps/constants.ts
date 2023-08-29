@@ -5,6 +5,7 @@ import {
 } from '@jupiterone/integration-sdk-core';
 
 export const Steps: Record<
+  // TODO: change tenant to org if needed
   | 'FETCH_TENANT'
   | 'FETCH_PROJECTS'
   | 'FETCH_CLUSTERS'
@@ -13,6 +14,7 @@ export const Steps: Record<
   | 'FETCH_ROLES',
   string
 > = {
+  // TODO: change tenant to org if needed
   FETCH_TENANT: 'fetch-tenant',
   FETCH_PROJECTS: 'fetch-projects',
   FETCH_CLUSTERS: 'fetch-clusters',
@@ -27,8 +29,9 @@ export const Entities: Record<
 > = {
   ORGANIZATION: {
     resourceName: 'Organization',
+    // TODO: change tenant to org if needed
     _type: 'mongodb_tenant',
-    _class: ['Account'],
+    _class: ['Organization'],
   },
   PROJECT: {
     resourceName: 'Project',
@@ -59,16 +62,33 @@ export const Entities: Record<
 
 export const Relationships: Record<
   | 'ORGANIZATION_HAS_USER'
+  | 'ORGANIZATION_HAS_PROJECT'
+  | 'ORGANIZATION_HAS_TEAM'
   | 'TEAM_HAS_USER'
   | 'PROJECT_HAS_CLUSTER'
-  | 'ROLE_HAS_PROJECT'
-  | 'USER_HAS_ROLE',
+  | 'PROJECT_HAS_ROLE'
+  | 'ROLE_LIMITS_USER',
   StepRelationshipMetadata
 > = {
   ORGANIZATION_HAS_USER: {
     sourceType: Entities.ORGANIZATION._type,
     targetType: Entities.USER._type,
+    // TODO: change tenant to org if needed
     _type: 'mongodb_tenant_has_user',
+    _class: RelationshipClass.HAS,
+  },
+  ORGANIZATION_HAS_PROJECT: {
+    sourceType: Entities.ORGANIZATION._type,
+    targetType: Entities.PROJECT._type,
+    // TODO: change tenant to org if needed
+    _type: 'mongodb_tenant_has_project',
+    _class: RelationshipClass.HAS,
+  },
+  ORGANIZATION_HAS_TEAM: {
+    sourceType: Entities.ORGANIZATION._type,
+    targetType: Entities.TEAM._type,
+    // TODO: change tenant to org if needed
+    _type: 'mongodb_tenant_has_team',
     _class: RelationshipClass.HAS,
   },
   TEAM_HAS_USER: {
@@ -83,16 +103,16 @@ export const Relationships: Record<
     _type: 'mongodb_project_has_cluster',
     _class: RelationshipClass.HAS,
   },
-  ROLE_HAS_PROJECT: {
-    sourceType: Entities.ROLE._type,
-    targetType: Entities.PROJECT._type,
-    _type: 'mongodb_role_has_project',
+  PROJECT_HAS_ROLE: {
+    sourceType: Entities.PROJECT._type,
+    targetType: Entities.ROLE._type,
+    _type: 'mongodb_project_has_role',
     _class: RelationshipClass.HAS,
   },
-  USER_HAS_ROLE: {
-    sourceType: Entities.USER._type,
-    targetType: Entities.ROLE._type,
+  ROLE_LIMITS_USER: {
+    sourceType: Entities.ROLE._type,
+    targetType: Entities.USER._type,
     _type: 'mongodb_user_has_role',
-    _class: RelationshipClass.HAS,
+    _class: RelationshipClass.LIMITS,
   },
 };

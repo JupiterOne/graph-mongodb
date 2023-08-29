@@ -44,7 +44,7 @@ export class APIClient {
           throw new IntegrationProviderAuthenticationError({
             endpoint: `${this._baseUrl}`,
             status: data.error,
-            statusText: data?.detail || 'Unauthorized',
+            statusText: data?.detail || data.reason || 'Unauthorized',
           });
         }
       });
