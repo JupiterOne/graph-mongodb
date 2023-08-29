@@ -62,7 +62,6 @@
   },
   "dependencies": {
     "digest-fetch": "v2",
-    "node-fetch": "v2",
-    "urllib": "^3.18.0"
+    "node-fetch": "v2"
   }
 }
