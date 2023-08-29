@@ -26,7 +26,7 @@ describe('Fetch organizations step', () => {
   });
 
   test('fetches organizations correctly', async () => {
-    const stepConfig = buildStepTestConfigForStep(Steps.FETCH_TENANT);
+    const stepConfig = buildStepTestConfigForStep(Steps.FETCH_ORGANIZATIONS);
     const stepResult = await executeStepWithDependencies(stepConfig);
     expect(stepResult).toMatchStepMetadata(stepConfig);
   });

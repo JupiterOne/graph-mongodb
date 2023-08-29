@@ -1,6 +1,5 @@
 import {
   IntegrationLogger,
-  IntegrationProviderAPIError,
   IntegrationProviderAuthenticationError,
 } from '@jupiterone/integration-sdk-core';
 import { IntegrationConfig } from './config';
