@@ -14,7 +14,8 @@ export const fetchUsersSteps: IntegrationStep<IntegrationConfig>[] = [
     relationships: [
       Relationships.ORGANIZATION_HAS_USER,
       Relationships.TEAM_HAS_USER,
-      Relationships.ROLE_LIMITS_USER,
+      // TODO: I think it might make sense to move this to its own step to create/relate the roles
+      Relationships.USER_ASSIGNED_ROLE,
     ],
     dependsOn: [Steps.FETCH_ORGANIZATIONS, Steps.FETCH_TEAMS],
     executionHandler: fetchUsers,
