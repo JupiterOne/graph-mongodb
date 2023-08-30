@@ -9,3 +9,9 @@ export type Organization = {
   name: string;
   links: MongoDBLink[];
 };
+
+export type Team = {
+  id: string;
+  name: string;
+  links: MongoDBLink[];
+};
