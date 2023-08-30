@@ -68,7 +68,7 @@ export class APIClient {
     const data = await response.json();
     if (data.error === 401) {
       throw new IntegrationProviderAuthenticationError({
-        endpoint: `${this._baseUrl}/${endpoint}`,
+        endpoint: `${this._baseUrl}${endpoint}`,
         status: data.error,
         statusText: data?.detail || data.reason || 'Unauthorized',
       });
