@@ -21,7 +21,7 @@ export const createOrganizationEntity = (
         name: organization.name,
         displayName: organization.name,
         isDeleted: organization.isDeleted,
-        webLink: `https://cloud.mongodb.com/v2/${organization.id}`,
+        webLink: `https://cloud.mongodb.com/v2#/org/${organization.id}`,
       },
     },
   });

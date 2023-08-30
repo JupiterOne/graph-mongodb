@@ -30,7 +30,7 @@ describe('createOrganizationEntity', () => {
       name: 'janus-org',
       id: 'mongo-db-org-id-0922',
       organizationId: 'mongo-db-org-id-0922',
-      webLink: 'https://cloud.mongodb.com/v2/mongo-db-org-id-0922',
+      webLink: 'https://cloud.mongodb.com/v2#/org/mongo-db-org-id-0922',
       isDeleted: false,
     });
   });
