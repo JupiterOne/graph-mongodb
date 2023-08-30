@@ -4,7 +4,7 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import { IntegrationConfig } from './config';
 import DigestClient from 'digest-fetch';
-import { Organization } from './types';
+import { Organization, Team } from './types';
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
 
@@ -76,6 +76,15 @@ export class APIClient {
       // TODO: handle other error types
     }
     return data;
+  }
+
+  public async fetchTeams(
+    orgId: string,
+    iterator: ResourceIteratee<Team>,
+  ): Promise<void> {
+    const teams = await this._wrapWithErrorHandling(`/orgs/${orgId}/teams`);
+
+    await Promise.all(teams.results.map(iterator));
   }
 }
 
