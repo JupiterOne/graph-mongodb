@@ -15,3 +15,12 @@ export type Team = {
   name: string;
   links: MongoDBLink[];
 };
+
+export type Project = {
+  id: string;
+  name: string;
+  orgId: string;
+  clusterCount: number;
+  created: string;
+  links: MongoDBLink[];
+};
