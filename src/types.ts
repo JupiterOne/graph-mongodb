@@ -24,3 +24,50 @@ export type Project = {
   created: string;
   links: MongoDBLink[];
 };
+
+export type Cluster = {
+  backupEnabled: boolean;
+  biConnector: {
+    enabled: boolean;
+    readPreference: string;
+  };
+  clusterType: string;
+  connectionStrings: {
+    standard: string;
+    standardSrv: string;
+  };
+  createDate: string;
+  diskSizeGB: number;
+  encryptionAtRestProvider: string;
+  groupId: string;
+  id: string;
+  labels: string[];
+  mongoDBMajorVersion: string;
+  mongoDBVersion: string;
+  name: string;
+  paused: boolean;
+  pitEnabled: boolean;
+  replicationSpecs: [
+    {
+      id: string;
+      numShards: number;
+      regionConfigs: [
+        {
+          electableSpecs: {
+            instanceSize: string;
+          };
+          backingProviderName: string;
+          priority: number;
+          providerName: string;
+          regionName: string;
+        },
+      ];
+      zoneName: string;
+    },
+  ];
+  rootCertType: string;
+  stateName: string;
+  tags: string[];
+  terminationProtectionEnabled: boolean;
+  versionReleaseSystem: string;
+};

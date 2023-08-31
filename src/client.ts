@@ -4,7 +4,7 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import { IntegrationConfig } from './config';
 import DigestClient from 'digest-fetch';
-import { Organization, Project, Team } from './types';
+import { Cluster, Organization, Project, Team } from './types';
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
 
@@ -69,6 +69,17 @@ export class APIClient {
     const projects = await this._wrapWithErrorHandling('/groups');
 
     await Promise.all(projects.results.map(iterator));
+  }
+
+  public async fetchClustersForProject(
+    projectId: string,
+    iterator: ResourceIteratee<Cluster>,
+  ): Promise<void> {
+    const clusters = await this._wrapWithErrorHandling(
+      `/groups/${projectId}/clusters`,
+    );
+
+    await Promise.all(clusters.results.map(iterator));
   }
 
   private async _wrapWithErrorHandling(endpoint: string): Promise<any> {
