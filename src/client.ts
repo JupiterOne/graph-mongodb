@@ -4,7 +4,7 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import { IntegrationConfig } from './config';
 import DigestClient from 'digest-fetch';
-import { Organization, Team } from './types';
+import { Organization, Project, Team } from './types';
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
 
@@ -60,11 +60,23 @@ export class APIClient {
     await Promise.all(organizations.results.map(iterator));
   }
 
+  public async fetchProjects(
+    iterator: ResourceIteratee<Project>,
+  ): Promise<void> {
+    /* 
+    projects and groups are synonymous in MongoDB. See the NOTE in this section https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Projects/operation/getProject
+     */
+    const projects = await this._wrapWithErrorHandling('/groups');
+
+    await Promise.all(projects.results.map(iterator));
+  }
+
   private async _wrapWithErrorHandling(endpoint: string): Promise<any> {
     const response = await this._digestClient.fetch(
       `${this._baseUrl}${endpoint}`,
       this._requestOptions,
     );
+    // TODO: handle paging
     const data = await response.json();
     if (data.error === 401) {
       throw new IntegrationProviderAuthenticationError({
