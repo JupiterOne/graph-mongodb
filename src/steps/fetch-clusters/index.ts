@@ -29,9 +29,9 @@ export async function fetchClusters({
 
   const client = createAPIClient(config);
 
-  await jobState.iterateEntities(Entities.PROJECT, async (project) => {
+  await jobState.iterateEntities(Entities.PROJECT, async (projectEntity) => {
     await client.fetchClustersForProject(
-      project.id as string,
+      projectEntity.id as string,
       async (cluster) => {
         const clusterEntity = await jobState.addEntity(
           createClusterEntity(cluster),
@@ -39,7 +39,7 @@ export async function fetchClusters({
         await jobState.addRelationship(
           createDirectRelationship({
             _class: Relationships.PROJECT_HAS_CLUSTER._class,
-            from: project,
+            from: projectEntity,
             to: clusterEntity,
           }),
         );
