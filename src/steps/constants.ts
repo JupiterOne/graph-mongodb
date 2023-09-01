@@ -10,7 +10,9 @@ export const Steps: Record<
   | 'FETCH_CLUSTERS'
   | 'FETCH_USERS'
   | 'FETCH_TEAMS'
-  | 'FETCH_KEYS',
+  | 'FETCH_KEYS'
+  | 'CREATE_ROLES_FROM_USERS'
+  | 'CREATE_ROLES_FROM_TEAMS',
   string
 > = {
   FETCH_ORGANIZATIONS: 'fetch-organizations',
@@ -19,6 +21,8 @@ export const Steps: Record<
   FETCH_USERS: 'fetch-users',
   FETCH_TEAMS: 'fetch-teams',
   FETCH_KEYS: 'fetch-keys',
+  CREATE_ROLES_FROM_USERS: 'create-roles-from-users',
+  CREATE_ROLES_FROM_TEAMS: 'create-roles-from-teams',
 };
 
 export const Entities: Record<

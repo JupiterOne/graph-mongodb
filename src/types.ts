@@ -71,3 +71,22 @@ export type Cluster = {
   terminationProtectionEnabled: boolean;
   versionReleaseSystem: string;
 };
+
+export type User = {
+  id: string;
+  country: string;
+  createdAt: string;
+  emailAddress: string;
+  firstName: string;
+  lastName: string;
+  lastAuth: string;
+  links: MongoDBLink[];
+  mobileNumber: string;
+  teamIds: string[];
+  username: string;
+  roles: Role[];
+};
+
+export type Role = {
+  [key: string]: string;
+};

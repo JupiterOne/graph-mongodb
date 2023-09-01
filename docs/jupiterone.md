@@ -23,6 +23,7 @@ The following entities are created:
 | Key          | `mongodb_key`          | `AccessKey`         |
 | Organization | `mongodb_organization` | `Organization`      |
 | Project      | `mongodb_project`      | `Project`           |
+| Role         | `mongodb_role`         | `AccessRole`        |
 | Team         | `mongodb_team`         | `UserGroup`, `Team` |
 | User         | `mongodb_user`         | `User`              |
 
@@ -39,6 +40,8 @@ The following relationships are created:
 | `mongodb_organization` | **HAS**               | `mongodb_user`        |
 | `mongodb_project`      | **ASSIGNED**          | `mongodb_key`         |
 | `mongodb_project`      | **HAS**               | `mongodb_cluster`     |
+| `mongodb_project`      | **HAS**               | `mongodb_team`        |
+| `mongodb_team`         | **HAS**               | `mongodb_role`        |
 | `mongodb_team`         | **HAS**               | `mongodb_user`        |
 | `mongodb_user`         | **ASSIGNED**          | `mongodb_role`        |
 

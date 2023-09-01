@@ -82,6 +82,17 @@ export class APIClient {
     await Promise.all(clusters.results.map(iterator));
   }
 
+  public async fetchUsersForOrganization(
+    organizationId: string,
+    iterator: ResourceIteratee<User>,
+  ): Promise<void> {
+    const users = await this._wrapWithErrorHandling(
+      `/orgs/${organizationId}/users`,
+    );
+
+    await Promise.all(users.results.map(iterator));
+  }
+
   private async _wrapWithErrorHandling(endpoint: string): Promise<any> {
     const response = await this._digestClient.fetch(
       `${this._baseUrl}${endpoint}`,
