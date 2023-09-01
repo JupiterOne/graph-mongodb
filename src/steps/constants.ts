@@ -10,7 +10,7 @@ export const Steps: Record<
   | 'FETCH_CLUSTERS'
   | 'FETCH_USERS'
   | 'FETCH_TEAMS'
-  | 'FETCH_KEYS'
+  | 'FETCH_API_KEYS'
   | 'CREATE_ROLES_FROM_USERS'
   | 'CREATE_ROLES_FROM_TEAMS',
   string
@@ -20,13 +20,13 @@ export const Steps: Record<
   FETCH_CLUSTERS: 'fetch-clusters',
   FETCH_USERS: 'fetch-users',
   FETCH_TEAMS: 'fetch-teams',
-  FETCH_KEYS: 'fetch-keys',
+  FETCH_API_KEYS: 'fetch-api-keys',
   CREATE_ROLES_FROM_USERS: 'create-roles-from-users',
   CREATE_ROLES_FROM_TEAMS: 'create-roles-from-teams',
 };
 
 export const Entities: Record<
-  'ORGANIZATION' | 'PROJECT' | 'CLUSTER' | 'USER' | 'TEAM' | 'ROLE' | 'KEY',
+  'ORGANIZATION' | 'PROJECT' | 'CLUSTER' | 'USER' | 'TEAM' | 'ROLE' | 'API_KEY',
   StepEntityMetadata
 > = {
   ORGANIZATION: {
@@ -59,9 +59,9 @@ export const Entities: Record<
     _type: 'mongodb_role',
     _class: ['AccessRole'],
   },
-  KEY: {
-    resourceName: 'Key',
-    _type: 'mongodb_key',
+  API_KEY: {
+    resourceName: 'API KEY',
+    _type: 'mongodb_api_key',
     _class: ['AccessKey'],
   },
 };
@@ -70,16 +70,16 @@ export const Relationships: Record<
   | 'ORGANIZATION_HAS_USER'
   | 'ORGANIZATION_HAS_PROJECT'
   | 'ORGANIZATION_HAS_TEAM'
-  | 'ORGANIZATION_ASSIGNED_KEY'
+  | 'ORGANIZATION_ASSIGNED_API_KEY'
   | 'TEAM_HAS_USER'
   | 'TEAM_HAS_ROLE'
   | 'PROJECT_HAS_CLUSTER'
   | 'PROJECT_HAS_TEAM'
   | 'PROJECT_HAS_USER'
   | 'PROJECT_OWNS_ROLE'
-  | 'PROJECT_ASSIGNED_KEY'
+  | 'PROJECT_ASSIGNED_API_KEY'
   | 'USER_ASSIGNED_ROLE'
-  | 'KEY_HAS_ROLE',
+  | 'API_KEY_HAS_ROLE',
   StepRelationshipMetadata
 > = {
   ORGANIZATION_HAS_USER: {
@@ -100,10 +100,10 @@ export const Relationships: Record<
     _type: 'mongodb_organization_has_team',
     _class: RelationshipClass.HAS,
   },
-  ORGANIZATION_ASSIGNED_KEY: {
+  ORGANIZATION_ASSIGNED_API_KEY: {
     sourceType: Entities.ORGANIZATION._type,
-    targetType: Entities.KEY._type,
-    _type: 'mongodb_organization_assigned_key',
+    targetType: Entities.API_KEY._type,
+    _type: 'mongodb_organization_assigned_api_key',
     _class: RelationshipClass.ASSIGNED,
   },
   TEAM_HAS_USER: {
@@ -142,10 +142,10 @@ export const Relationships: Record<
     _type: 'mongodb_project_owns_role',
     _class: RelationshipClass.OWNS,
   },
-  PROJECT_ASSIGNED_KEY: {
+  PROJECT_ASSIGNED_API_KEY: {
     sourceType: Entities.PROJECT._type,
-    targetType: Entities.KEY._type,
-    _type: 'mongodb_project_assigned_key',
+    targetType: Entities.API_KEY._type,
+    _type: 'mongodb_project_assigned_api_key',
     _class: RelationshipClass.ASSIGNED,
   },
   USER_ASSIGNED_ROLE: {
@@ -154,10 +154,10 @@ export const Relationships: Record<
     _type: 'mongodb_user_assigned_role',
     _class: RelationshipClass.ASSIGNED,
   },
-  KEY_HAS_ROLE: {
-    sourceType: Entities.KEY._type,
+  API_KEY_HAS_ROLE: {
+    sourceType: Entities.API_KEY._type,
     targetType: Entities.ROLE._type,
-    _type: 'mongodb_key_has_role',
+    _type: 'mongodb_api_key_has_role',
     _class: RelationshipClass.HAS,
   },
 };
