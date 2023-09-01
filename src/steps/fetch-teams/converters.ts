@@ -2,11 +2,14 @@ import {
   Entity,
   createIntegrationEntity,
 } from '@jupiterone/integration-sdk-core';
-import { Team } from '../../types';
+import { OrganizationTeam } from '../../types';
 import { Entities } from '../constants';
 import { createEntityKey } from '../createEntityKeyUtil';
 
-export const createTeamEntity = (organization: Entity, team: Team): Entity =>
+export const createTeamEntity = (
+  organization: Entity,
+  team: OrganizationTeam,
+): Entity =>
   createIntegrationEntity({
     entityData: {
       source: team,

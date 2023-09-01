@@ -4,7 +4,14 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import { IntegrationConfig } from './config';
 import DigestClient from 'digest-fetch';
-import { Cluster, Organization, Project, Team } from './types';
+import {
+  Cluster,
+  Organization,
+  Project,
+  OrganizationTeam,
+  User,
+  ProjectTeam,
+} from './types';
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
 
@@ -93,6 +100,25 @@ export class APIClient {
     await Promise.all(users.results.map(iterator));
   }
 
+  public async fetchTeamsForOrganization(
+    orgId: string,
+    iterator: ResourceIteratee<OrganizationTeam>,
+  ): Promise<void> {
+    const teams = await this._wrapWithErrorHandling(`/orgs/${orgId}/teams`);
+
+    await Promise.all(teams.results.map(iterator));
+  }
+
+  public async fetchTeamsForProject(
+    projectId: string,
+    iterator: ResourceIteratee<ProjectTeam>,
+  ): Promise<void> {
+    const teams = await this._wrapWithErrorHandling(
+      `/groups/${projectId}/teams`,
+    );
+
+    await Promise.all(teams.results.map(iterator));
+  }
   private async _wrapWithErrorHandling(endpoint: string): Promise<any> {
     const response = await this._digestClient.fetch(
       `${this._baseUrl}${endpoint}`,
@@ -110,15 +136,6 @@ export class APIClient {
       // TODO: handle other error types
     }
     return data;
-  }
-
-  public async fetchTeams(
-    orgId: string,
-    iterator: ResourceIteratee<Team>,
-  ): Promise<void> {
-    const teams = await this._wrapWithErrorHandling(`/orgs/${orgId}/teams`);
-
-    await Promise.all(teams.results.map(iterator));
   }
 }
 

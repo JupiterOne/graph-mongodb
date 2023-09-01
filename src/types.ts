@@ -10,9 +10,16 @@ export type Organization = {
   links: MongoDBLink[];
 };
 
-export type Team = {
+export type OrganizationTeam = {
   id: string;
   name: string;
+  links: MongoDBLink[];
+};
+
+// The distinction between OrganizationTeam and ProjectTeam is pretty small but we do need both types
+export type ProjectTeam = {
+  teamId: string;
+  roleNames: string[];
   links: MongoDBLink[];
 };
 
