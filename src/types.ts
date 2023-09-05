@@ -95,5 +95,17 @@ export type User = {
 };
 
 export type Role = {
-  [key: string]: string;
+  orgId?: string;
+  groupId?: string;
+  roleName: string;
+};
+
+export type ApiKey = {
+  id: string;
+  desc: string;
+  roles: Role[];
+  // private key is redacted by the API
+  privateKey: string;
+  publicKey: string;
+  links: MongoDBLink[];
 };

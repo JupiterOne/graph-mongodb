@@ -11,6 +11,7 @@ import {
   OrganizationTeam,
   User,
   ProjectTeam,
+  ApiKey,
 } from './types';
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
@@ -95,6 +96,17 @@ export class APIClient {
   ): Promise<void> {
     const users = await this._wrapWithErrorHandling(
       `/orgs/${organizationId}/users`,
+    );
+
+    await Promise.all(users.results.map(iterator));
+  }
+
+  public async fetchUsersForProject(
+    projectId: string,
+    iterator: ResourceIteratee<User>,
+  ): Promise<void> {
+    const users = await this._wrapWithErrorHandling(
+      `/groups/${projectId}/users`,
     );
 
     await Promise.all(users.results.map(iterator));
