@@ -63,9 +63,7 @@ export class APIClient {
   public async fetchOrganizations(
     iterator: ResourceIteratee<Organization>,
   ): Promise<void> {
-    const organizations = await this._wrapWithErrorHandling('/orgs');
-
-    await Promise.all(organizations.results.map(iterator));
+    await this._wrapWithErrorHandling('/orgs', iterator);
   }
 
   public async fetchProjects(
@@ -74,92 +72,102 @@ export class APIClient {
     /* 
     projects and groups are synonymous in MongoDB. See the NOTE in this section https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Projects/operation/getProject
      */
-    const projects = await this._wrapWithErrorHandling('/groups');
-
-    await Promise.all(projects.results.map(iterator));
+    await this._wrapWithErrorHandling('/groups', iterator);
   }
 
   public async fetchClustersForProject(
     projectId: string,
     iterator: ResourceIteratee<Cluster>,
   ): Promise<void> {
-    const clusters = await this._wrapWithErrorHandling(
+    await this._wrapWithErrorHandling(
       `/groups/${projectId}/clusters`,
+      iterator,
     );
-
-    await Promise.all(clusters.results.map(iterator));
   }
 
   public async fetchUsersForOrganization(
     organizationId: string,
     iterator: ResourceIteratee<User>,
   ): Promise<void> {
-    const users = await this._wrapWithErrorHandling(
+    await this._wrapWithErrorHandling(
       `/orgs/${organizationId}/users`,
+      iterator,
     );
-
-    await Promise.all(users.results.map(iterator));
   }
 
   public async fetchUsersForProject(
     projectId: string,
     iterator: ResourceIteratee<User>,
   ): Promise<void> {
-    const users = await this._wrapWithErrorHandling(
-      `/groups/${projectId}/users`,
-    );
-
-    await Promise.all(users.results.map(iterator));
+    await this._wrapWithErrorHandling(`/groups/${projectId}/users`, iterator);
   }
 
   public async fetchTeamsForOrganization(
     orgId: string,
     iterator: ResourceIteratee<OrganizationTeam>,
   ): Promise<void> {
-    const teams = await this._wrapWithErrorHandling(`/orgs/${orgId}/teams`);
-
-    await Promise.all(teams.results.map(iterator));
+    await this._wrapWithErrorHandling(`/orgs/${orgId}/teams`, iterator);
   }
 
   public async fetchTeamsForProject(
     projectId: string,
     iterator: ResourceIteratee<ProjectTeam>,
   ): Promise<void> {
-    const teams = await this._wrapWithErrorHandling(
-      `/groups/${projectId}/teams`,
-    );
-
-    await Promise.all(teams.results.map(iterator));
+    await this._wrapWithErrorHandling(`/groups/${projectId}/teams`, iterator);
   }
 
   public async fetchApiKeysForOrganization(
     organizationId: string,
     iterator: ResourceIteratee<ApiKey>,
   ): Promise<void> {
-    const apiKeys = await this._wrapWithErrorHandling(
+    await this._wrapWithErrorHandling(
       `/orgs/${organizationId}/apiKeys`,
+      iterator,
     );
-
-    await Promise.all(apiKeys.results.map(iterator));
   }
 
-  private async _wrapWithErrorHandling(endpoint: string): Promise<any> {
-    const response = await this._digestClient.fetch(
-      `${this._baseUrl}${endpoint}`,
-      this._requestOptions,
-    );
-    // TODO: handle paging
-    const data = await response.json();
-    if (data.error === 401) {
-      throw new IntegrationProviderAuthenticationError({
-        endpoint: `${this._baseUrl}${endpoint}`,
-        status: data.error,
-        statusText: data?.detail || data.reason || 'Unauthorized',
-      });
-    } else if (data.error === 400) {
-      // TODO: handle other error types
-    }
-    return data;
+  private async _wrapWithErrorHandling<T>(
+    endpoint: string,
+    iterator: ResourceIteratee<T>,
+  ): Promise<any> {
+    let pageNumber: number = 1;
+    let totalCount: number = 0;
+    let seenCount: number = 0;
+
+    do {
+      const response = await this._digestClient.fetch(
+        // Items per page can go up to 500 but we'll keep it at 100 since that is the default
+        `${this._baseUrl}${endpoint}?pageNum=${pageNumber}&itemsPerPage=100`,
+        this._requestOptions,
+      );
+
+      const data = await response.json();
+
+      if (data.error) {
+        console.log(data.error);
+        // TODO: implement _handleErrorResponse()
+      }
+
+      totalCount = data.totalCount;
+      seenCount += data.results.length;
+      if (totalCount > seenCount) pageNumber++;
+
+      await Promise.all(data.results.map(iterator));
+    } while (totalCount > seenCount);
+  }
+
+  // TODO: handle error responses
+  private async _handleErrorResponse(response) {
+    //   //   if (data.error === 401) {
+    //   //   throw new IntegrationProviderAuthenticationError({
+    //   //     endpoint: `${this._baseUrl}${endpoint}`,
+    //   //     status: data.error,
+    //   //     statusText: data?.detail || data.reason || 'Unauthorized',
+    //   //   });
+    //   // } else if (data.error === 400) {
+    //   //   // TODO: handle other error types
+    //   // }
+    // }
   }
 }
 
