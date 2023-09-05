@@ -4,20 +4,7 @@ import {
   StepRelationshipMetadata,
 } from '@jupiterone/integration-sdk-core';
 
-export const Steps: Record<
-  | 'FETCH_ORGANIZATIONS'
-  | 'FETCH_PROJECTS'
-  | 'FETCH_CLUSTERS'
-  | 'FETCH_USERS'
-  | 'FETCH_TEAMS'
-  | 'FETCH_API_KEYS'
-  | 'FETCH_USER_ROLES'
-  | 'FETCH_TEAM_ROLES'
-  | 'FETCH_API_KEY_ROLES'
-  | 'RELATE_ROLES_TO_PROJECTS'
-  | 'RELATE_USERS_TO_PROJECTS',
-  string
-> = {
+export const Steps = {
   FETCH_ORGANIZATIONS: 'fetch-organizations',
   FETCH_PROJECTS: 'fetch-projects',
   FETCH_CLUSTERS: 'fetch-clusters',
@@ -29,12 +16,9 @@ export const Steps: Record<
   FETCH_API_KEY_ROLES: 'fetch-api-key-roles',
   RELATE_ROLES_TO_PROJECTS: 'relate-roles-to-projects',
   RELATE_USERS_TO_PROJECTS: 'relate-users-to-projects',
-};
+} satisfies Record<string, `fetch-${string}` | `relate-${string}-to-${string}`>;
 
-export const Entities: Record<
-  'ORGANIZATION' | 'PROJECT' | 'CLUSTER' | 'USER' | 'TEAM' | 'ROLE' | 'API_KEY',
-  StepEntityMetadata
-> = {
+export const Entities = {
   ORGANIZATION: {
     resourceName: 'Organization',
     _type: 'mongodb_organization',
@@ -66,28 +50,13 @@ export const Entities: Record<
     _class: ['AccessRole'],
   },
   API_KEY: {
-    resourceName: 'API KEY',
+    resourceName: 'API Key',
     _type: 'mongodb_api_key',
     _class: ['AccessKey'],
   },
-};
+} satisfies Record<string, StepEntityMetadata>;
 
-export const Relationships: Record<
-  | 'ORGANIZATION_HAS_USER'
-  | 'ORGANIZATION_HAS_PROJECT'
-  | 'ORGANIZATION_HAS_TEAM'
-  | 'ORGANIZATION_HAS_API_KEY'
-  | 'TEAM_HAS_USER'
-  | 'TEAM_HAS_ROLE'
-  | 'PROJECT_HAS_CLUSTER'
-  | 'PROJECT_HAS_TEAM'
-  | 'PROJECT_HAS_USER'
-  | 'PROJECT_OWNS_ROLE'
-  | 'PROJECT_HAS_API_KEY'
-  | 'USER_ASSIGNED_ROLE'
-  | 'API_KEY_HAS_ROLE',
-  StepRelationshipMetadata
-> = {
+export const Relationships = {
   ORGANIZATION_HAS_USER: {
     sourceType: Entities.ORGANIZATION._type,
     targetType: Entities.USER._type,
@@ -166,4 +135,4 @@ export const Relationships: Record<
     _type: 'mongodb_api_key_has_role',
     _class: RelationshipClass.HAS,
   },
-};
+} satisfies Record<string, StepRelationshipMetadata>;
