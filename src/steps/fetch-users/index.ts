@@ -44,7 +44,7 @@ export async function fetchUsers({
   await jobState.iterateEntities(
     Entities.ORGANIZATION,
     async (organizationEntity) => {
-      await client.fetchUsersForOrganization(
+      await client.iterateUsersForOrganization(
         organizationEntity.id as string,
         async (user) => {
           const userEntity = await jobState.addEntity(

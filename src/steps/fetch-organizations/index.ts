@@ -26,7 +26,7 @@ export async function fetchOrganizations({
   const { config } = instance;
   const client = createAPIClient(config);
 
-  await client.fetchOrganizations(async (organization) => {
+  await client.iterateOrganizations(async (organization) => {
     await jobState.addEntity(createOrganizationEntity(organization));
   });
 }

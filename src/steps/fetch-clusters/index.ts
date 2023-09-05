@@ -30,7 +30,7 @@ export async function fetchClusters({
   const client = createAPIClient(config);
 
   await jobState.iterateEntities(Entities.PROJECT, async (projectEntity) => {
-    await client.fetchClustersForProject(
+    await client.iterateClustersForProject(
       projectEntity.id as string,
       async (cluster) => {
         const clusterEntity = await jobState.addEntity(

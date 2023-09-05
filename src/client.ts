@@ -60,13 +60,13 @@ export class APIClient {
     return Promise.resolve();
   }
 
-  public async fetchOrganizations(
+  public async iterateOrganizations(
     iterator: ResourceIteratee<Organization>,
   ): Promise<void> {
     await this._wrapWithErrorHandling('/orgs', iterator);
   }
 
-  public async fetchProjects(
+  public async iterateProjects(
     iterator: ResourceIteratee<Project>,
   ): Promise<void> {
     /* 
@@ -75,7 +75,7 @@ export class APIClient {
     await this._wrapWithErrorHandling('/groups', iterator);
   }
 
-  public async fetchClustersForProject(
+  public async iterateClustersForProject(
     projectId: string,
     iterator: ResourceIteratee<Cluster>,
   ): Promise<void> {
@@ -85,7 +85,7 @@ export class APIClient {
     );
   }
 
-  public async fetchUsersForOrganization(
+  public async iterateUsersForOrganization(
     organizationId: string,
     iterator: ResourceIteratee<User>,
   ): Promise<void> {
@@ -95,28 +95,28 @@ export class APIClient {
     );
   }
 
-  public async fetchUsersForProject(
+  public async iterateUsersForProject(
     projectId: string,
     iterator: ResourceIteratee<User>,
   ): Promise<void> {
     await this._wrapWithErrorHandling(`/groups/${projectId}/users`, iterator);
   }
 
-  public async fetchTeamsForOrganization(
+  public async iterateTeamsForOrganization(
     orgId: string,
     iterator: ResourceIteratee<OrganizationTeam>,
   ): Promise<void> {
     await this._wrapWithErrorHandling(`/orgs/${orgId}/teams`, iterator);
   }
 
-  public async fetchTeamsForProject(
+  public async iterateTeamsForProject(
     projectId: string,
     iterator: ResourceIteratee<ProjectTeam>,
   ): Promise<void> {
     await this._wrapWithErrorHandling(`/groups/${projectId}/teams`, iterator);
   }
 
-  public async fetchApiKeysForOrganization(
+  public async iterateApiKeysForOrganization(
     organizationId: string,
     iterator: ResourceIteratee<ApiKey>,
   ): Promise<void> {

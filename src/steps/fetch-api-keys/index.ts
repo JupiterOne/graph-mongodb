@@ -48,7 +48,7 @@ export async function fetchApiKeys({
   await jobState.iterateEntities(
     Entities.ORGANIZATION,
     async (organizationEntity) => {
-      await client.fetchApiKeysForOrganization(
+      await client.iterateApiKeysForOrganization(
         organizationEntity.id as string,
         async (apiKey) => {
           // create API key entity
