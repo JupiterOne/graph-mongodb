@@ -119,6 +119,18 @@ export class APIClient {
 
     await Promise.all(teams.results.map(iterator));
   }
+
+  public async fetchApiKeysForOrganization(
+    organizationId: string,
+    iterator: ResourceIteratee<ApiKey>,
+  ): Promise<void> {
+    const apiKeys = await this._wrapWithErrorHandling(
+      `/orgs/${organizationId}/apiKeys`,
+    );
+
+    await Promise.all(apiKeys.results.map(iterator));
+  }
+
   private async _wrapWithErrorHandling(endpoint: string): Promise<any> {
     const response = await this._digestClient.fetch(
       `${this._baseUrl}${endpoint}`,

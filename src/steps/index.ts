@@ -3,7 +3,8 @@ import { fetchClustersSteps } from './fetch-clusters';
 import { fetchUsersSteps } from './fetch-users';
 import { fetchTeamsSteps } from './fetch-teams';
 import { fetchOrganizationsSteps } from './fetch-organizations';
-import { fetchKeysSteps } from './fetch-keys';
+import { fetchApiKeysSteps } from './fetch-api-keys';
+import { relateRolesToProjectsSteps } from './relate-roles-to-projects';
 
 const integrationSteps = [
   ...fetchOrganizationsSteps,
@@ -11,7 +12,8 @@ const integrationSteps = [
   ...fetchClustersSteps,
   ...fetchUsersSteps,
   ...fetchTeamsSteps,
-  ...fetchKeysSteps,
+  ...fetchApiKeysSteps,
+  ...relateRolesToProjectsSteps,
 ];
 
 export { integrationSteps };
