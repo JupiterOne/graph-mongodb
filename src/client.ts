@@ -1,5 +1,6 @@
 import {
   IntegrationLogger,
+  IntegrationProviderAPIError,
   IntegrationProviderAuthenticationError,
 } from '@jupiterone/integration-sdk-core';
 import { IntegrationConfig } from './config';
@@ -15,6 +16,25 @@ import {
 } from './types';
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
+
+/**
+ * Sample error response: 
+ * {
+  "detail": "(This is just an example, the exception may not be related to this endpoint) No provider AWS exists.",
+  "error": 400,
+  "errorCode": "INVALID_PROVIDER",
+  "parameters": [
+    "AWS"
+  ],
+  "reason": "Bad Request"
+}
+ */
+type ErrorResponse = {
+  error: 400 | 401 | 404 | 409 | 500;
+  detail: string;
+  errorCode: string;
+  reason: string;
+};
 
 /**
  * An APIClient maintains authentication state and provides an interface to
@@ -144,8 +164,7 @@ export class APIClient {
       const data = await response.json();
 
       if (data.error) {
-        console.log(data.error);
-        // TODO: implement _handleErrorResponse()
+        this._handleErrorResponse(data, endpoint);
       }
 
       totalCount = data.totalCount;
@@ -156,18 +175,34 @@ export class APIClient {
     } while (totalCount > seenCount);
   }
 
-  // TODO: handle error responses
-  private async _handleErrorResponse(response) {
-    //   //   if (data.error === 401) {
-    //   //   throw new IntegrationProviderAuthenticationError({
-    //   //     endpoint: `${this._baseUrl}${endpoint}`,
-    //   //     status: data.error,
-    //   //     statusText: data?.detail || data.reason || 'Unauthorized',
-    //   //   });
-    //   // } else if (data.error === 400) {
-    //   //   // TODO: handle other error types
-    //   // }
-    // }
+  private _handleErrorResponse(errorResponse: ErrorResponse, endpoint: string) {
+    const { error, errorCode, reason, detail } = errorResponse;
+    switch (errorResponse.error) {
+      case 401:
+        throw new IntegrationProviderAuthenticationError({
+          endpoint: `${this._baseUrl}${endpoint}`,
+          status: error,
+          // Ex: "INVALID_PROVIDER: Bad Request. No provider AWS exists."
+          statusText: `${errorCode}: ${reason}. ${detail}`,
+        });
+      case 400:
+      case 404:
+      case 409:
+      case 500:
+        throw new IntegrationProviderAPIError({
+          code: errorCode,
+          endpoint: `${this._baseUrl}${endpoint}`,
+          status: error,
+          statusText: `${errorCode}: ${reason}. ${detail}`,
+        });
+      default:
+        throw new IntegrationProviderAPIError({
+          code: errorCode || 'UNKNOWN',
+          endpoint: `${this._baseUrl}${endpoint}`,
+          status: error || 'UNKNOWN',
+          statusText: `An unexpected error occurred`,
+        });
+    }
   }
 }
 
