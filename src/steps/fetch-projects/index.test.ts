@@ -30,4 +30,12 @@ describe('Fetch projects step', () => {
     const stepResult = await executeStepWithDependencies(stepConfig);
     expect(stepResult).toMatchStepMetadata(stepConfig);
   });
+
+  test('builds role - project relationships correctly', async () => {
+    const stepConfig = buildStepTestConfigForStep(
+      Steps.RELATE_ROLES_TO_PROJECTS,
+    );
+    const stepResult = await executeStepWithDependencies(stepConfig);
+    expect(stepResult).toMatchStepMetadata(stepConfig);
+  });
 });

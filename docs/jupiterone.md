@@ -19,7 +19,7 @@ The following entities are created:
 
 | Resources    | Entity `_type`         | Entity `_class`     |
 | ------------ | ---------------------- | ------------------- |
-| API KEY      | `mongodb_api_key`      | `AccessKey`         |
+| API Key      | `mongodb_api_key`      | `AccessKey`         |
 | Cluster      | `mongodb_cluster`      | `Cluster`           |
 | Organization | `mongodb_organization` | `Organization`      |
 | Project      | `mongodb_project`      | `Project`           |
