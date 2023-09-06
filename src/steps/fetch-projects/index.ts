@@ -51,7 +51,7 @@ export async function fetchProjects({
 
   const client = createAPIClient(config);
 
-  await client.fetchProjects(async (project) => {
+  await client.iterateProjects(async (project) => {
     const projectEntity = await jobState.addEntity(
       createProjectEntity(project),
     );
@@ -85,7 +85,7 @@ export async function relateUsersToProjects({
   const client = createAPIClient(config);
 
   await jobState.iterateEntities(Entities.PROJECT, async (projectEntity) => {
-    await client.fetchUsersForProject(
+    await client.iterateUsersForProject(
       projectEntity.id as string,
       async (user) => {
         const userEntity = await jobState.findEntity(

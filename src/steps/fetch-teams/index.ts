@@ -42,7 +42,7 @@ export async function fetchTeams({
   await jobState.iterateEntities(
     Entities.ORGANIZATION,
     async (organizationEntity) => {
-      await client.fetchTeamsForOrganization(
+      await client.iterateTeamsForOrganization(
         organizationEntity.id as string,
         async (team) => {
           const teamEntity = await jobState.addEntity(
@@ -71,7 +71,7 @@ export async function createAndRelateRolesFromProjectTeams({
 
   await jobState.iterateEntities(Entities.PROJECT, async (projectEntity) => {
     // for each project, get the teams
-    await client.fetchTeamsForProject(
+    await client.iterateTeamsForProject(
       projectEntity.id as string,
       async (team) => {
         const roles = team.roleNames;
