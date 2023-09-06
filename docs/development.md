@@ -1,28 +1,29 @@
 # Development
 
-Add details here to give a brief overview of how to work with the provider APIs.
-Please reference any SDKs or API docs used to help build the integration here.
-
-## Prerequisites
-
-Supply details about software or tooling (like maybe Docker or Terraform) that
-is needed for development here.
-
-Please supply references to documentation that details how to install those
-dependencies here.
-
-Tools like Node.js and NPM are already covered in the [README](../README.md) so
-don't bother documenting that here.
+Any individual can create a free sandbox account with MongoDB Atlas here:
+https://www.mongodb.com/cloud/atlas/register. This project uses the MongoDB
+Atlas API (v2) to collect information about entities in your Atlas account. The
+Atlas API is documented here:
+https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/.
 
 ## Provider account setup
 
-Please provide information about the steps needed to create an account with a
-provider. Images and references to a provider's documentation is very helpful
-for new developers picking up your work.
+Once you've created a new Atlas account and verified it via email, you will be
+able to create an organization-level API key by following the steps in the
+[MongoDB docs](https://www.mongodb.com/docs/atlas/configure-api-access/#create-an-api-key-in-an-organization).
+
+When a new organization is created, Atlas enables the API access list
+requirement by default. You will need to add the IP address of the machine
+you're running this project on to the API access list or toggle the setting
+`Require IP Access List for the Atlas Administration API` to `OFF`.
+
+The organization-level API key should then be
+[added to each Project](https://www.mongodb.com/docs/atlas/configure-api-access/#invite-an-organization-api-key-to-a-project).
+You will need `Project Owner` access to add the API key to projects.
 
 ## Authentication
 
-Supply details here for information on how to authenticate with a provider so
-that developers have an idea of what's needed to hit APIs. It may be useful to
-provide explanations for each value specified in the
-[`IntegrationInstanceConfigFieldMap`](../src/config.ts).
+The API key configured in the step above will consist of a "private key" and a
+"public key". Ensure that you've created a `.env` file in the root of the
+project using the `.env.example` file as an example and populated the two
+variables with the appropriate values.
