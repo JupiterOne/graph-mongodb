@@ -1,3 +1,15 @@
+# v0.1.1 (Wed Sep 06 2023)
+
+#### 🐛 Bug Fix
+
+- INT-9421 - Add developer docs [#11](https://github.com/JupiterOne/graph-mongodb/pull/11) ([@jzolo22](https://github.com/jzolo22))
+
+#### Authors: 1
+
+- Julia Zolotarev ([@jzolo22](https://github.com/jzolo22))
+
+---
+
 # v0.1.0 (Wed Sep 06 2023)
 
 #### 🚀 Enhancement
