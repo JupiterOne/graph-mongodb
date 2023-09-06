@@ -19,6 +19,27 @@ export const fetchProjectsSteps: IntegrationStep<IntegrationConfig>[] = [
     dependsOn: [Steps.FETCH_ORGANIZATIONS],
     executionHandler: fetchProjects,
   },
+  {
+    id: Steps.RELATE_USERS_TO_PROJECTS,
+    name: 'Relate Users to Projects',
+    entities: [Entities.PROJECT],
+    relationships: [Relationships.PROJECT_HAS_USER],
+    dependsOn: [Steps.FETCH_USERS, Steps.FETCH_PROJECTS],
+    executionHandler: relateUsersToProjects,
+  },
+  {
+    id: Steps.RELATE_ROLES_TO_PROJECTS,
+    name: 'Relate Roles to Projects',
+    entities: [],
+    relationships: [Relationships.PROJECT_OWNS_ROLE],
+    dependsOn: [
+      Steps.FETCH_API_KEY_ROLES,
+      Steps.FETCH_TEAM_ROLES,
+      Steps.FETCH_USER_ROLES,
+      Steps.FETCH_PROJECTS,
+    ],
+    executionHandler: relateRolesToProjects,
+  },
 ];
 
 export async function fetchProjects({
@@ -53,3 +74,79 @@ export async function fetchProjects({
     }
   });
 }
+
+export async function relateUsersToProjects({
+  jobState,
+  instance,
+  logger,
+}: IntegrationStepExecutionContext<IntegrationConfig>) {
+  const { config } = instance;
+
+  const client = createAPIClient(config);
+
+  await jobState.iterateEntities(Entities.PROJECT, async (projectEntity) => {
+    await client.fetchUsersForProject(
+      projectEntity.id as string,
+      async (user) => {
+        const userEntity = await jobState.findEntity(
+          createEntityKey(Entities.USER, user.id),
+        );
+
+        if (userEntity) {
+          await jobState.addRelationship(
+            createDirectRelationship({
+              from: projectEntity,
+              to: userEntity,
+              _class: Relationships.PROJECT_HAS_USER._class,
+            }),
+          );
+        } else {
+          logger.warn(
+            `A user with id ${user.id} was not found; skipping relationship creation to project`,
+            {
+              userId: user.id,
+              projectId: projectEntity.id,
+            },
+          );
+        }
+      },
+    );
+  });
+}
+
+export async function relateRolesToProjects({
+  jobState,
+  logger,
+}: IntegrationStepExecutionContext<IntegrationConfig>) {
+  await jobState.iterateEntities(Entities.ROLE, async (roleEntity) => {
+    if (roleEntity.privilegeScope === 'project') {
+      const projectId = getProjectId(roleEntity.id as string);
+      const projectEntity = await jobState.findEntity(
+        createEntityKey(Entities.PROJECT, projectId),
+      );
+
+      if (projectEntity) {
+        await jobState.addRelationship(
+          createDirectRelationship({
+            from: projectEntity,
+            to: roleEntity,
+            _class: Relationships.PROJECT_OWNS_ROLE._class,
+          }),
+        );
+      } else {
+        logger.warn(
+          'A project was not found for this project role; skipping relationship creation',
+          {
+            roleId: roleEntity.id,
+            projectId,
+          },
+        );
+      }
+    }
+  });
+}
+
+const getProjectId = (id: string) => {
+  const [projectId] = id.split(':');
+  return projectId;
+};

@@ -21,8 +21,8 @@ export const fetchTeamsSteps: IntegrationStep<IntegrationConfig>[] = [
     executionHandler: fetchTeams,
   },
   {
-    id: Steps.CREATE_ROLES_FROM_TEAMS,
-    name: 'Create Roles From Teams',
+    id: Steps.FETCH_TEAM_ROLES,
+    name: 'Fetch Team Roles',
     entities: [Entities.ROLE],
     relationships: [
       Relationships.TEAM_HAS_ROLE,

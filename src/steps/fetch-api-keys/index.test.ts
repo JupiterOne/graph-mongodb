@@ -6,13 +6,13 @@ import { setupProjectRecording } from '../../../test/recording';
 import { buildStepTestConfigForStep } from '../../../test/config';
 import { Steps } from '../constants';
 
-describe('Fetch projects step', () => {
+describe('Fetch api keys step', () => {
   let recording: Recording;
 
   beforeEach(() => {
     recording = setupProjectRecording({
       directory: __dirname,
-      name: 'fetch-projects',
+      name: 'fetch-api-keys',
       options: {
         recordFailedRequests: true,
       },
@@ -25,16 +25,13 @@ describe('Fetch projects step', () => {
     }
   });
 
-  test('fetches projects correctly', async () => {
-    const stepConfig = buildStepTestConfigForStep(Steps.FETCH_PROJECTS);
+  test('fetches api keys correctly', async () => {
+    const stepConfig = buildStepTestConfigForStep(Steps.FETCH_API_KEYS);
     const stepResult = await executeStepWithDependencies(stepConfig);
     expect(stepResult).toMatchStepMetadata(stepConfig);
   });
-
-  test('builds role - project relationships correctly', async () => {
-    const stepConfig = buildStepTestConfigForStep(
-      Steps.RELATE_ROLES_TO_PROJECTS,
-    );
+  test('fetches api key roles correctly', async () => {
+    const stepConfig = buildStepTestConfigForStep(Steps.FETCH_API_KEY_ROLES);
     const stepResult = await executeStepWithDependencies(stepConfig);
     expect(stepResult).toMatchStepMetadata(stepConfig);
   });

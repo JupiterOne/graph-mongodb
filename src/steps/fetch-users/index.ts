@@ -23,8 +23,8 @@ export const fetchUsersSteps: IntegrationStep<IntegrationConfig>[] = [
     executionHandler: fetchUsers,
   },
   {
-    id: Steps.CREATE_ROLES_FROM_USERS,
-    name: 'Create Roles From Users',
+    id: Steps.FETCH_USER_ROLES,
+    name: 'Fetch User Roles',
     entities: [Entities.ROLE],
     relationships: [Relationships.USER_ASSIGNED_ROLE],
     dependsOn: [Steps.FETCH_USERS],

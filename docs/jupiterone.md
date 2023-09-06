@@ -19,8 +19,8 @@ The following entities are created:
 
 | Resources    | Entity `_type`         | Entity `_class`     |
 | ------------ | ---------------------- | ------------------- |
+| API Key      | `mongodb_api_key`      | `AccessKey`         |
 | Cluster      | `mongodb_cluster`      | `Cluster`           |
-| Key          | `mongodb_key`          | `AccessKey`         |
 | Organization | `mongodb_organization` | `Organization`      |
 | Project      | `mongodb_project`      | `Project`           |
 | Role         | `mongodb_role`         | `AccessRole`        |
@@ -33,14 +33,16 @@ The following relationships are created:
 
 | Source Entity `_type`  | Relationship `_class` | Target Entity `_type` |
 | ---------------------- | --------------------- | --------------------- |
-| `mongodb_key`          | **HAS**               | `mongodb_role`        |
-| `mongodb_organization` | **ASSIGNED**          | `mongodb_key`         |
+| `mongodb_api_key`      | **HAS**               | `mongodb_role`        |
+| `mongodb_organization` | **HAS**               | `mongodb_api_key`     |
 | `mongodb_organization` | **HAS**               | `mongodb_project`     |
 | `mongodb_organization` | **HAS**               | `mongodb_team`        |
 | `mongodb_organization` | **HAS**               | `mongodb_user`        |
-| `mongodb_project`      | **ASSIGNED**          | `mongodb_key`         |
+| `mongodb_project`      | **HAS**               | `mongodb_api_key`     |
 | `mongodb_project`      | **HAS**               | `mongodb_cluster`     |
 | `mongodb_project`      | **HAS**               | `mongodb_team`        |
+| `mongodb_project`      | **HAS**               | `mongodb_user`        |
+| `mongodb_project`      | **OWNS**              | `mongodb_role`        |
 | `mongodb_team`         | **HAS**               | `mongodb_role`        |
 | `mongodb_team`         | **HAS**               | `mongodb_user`        |
 | `mongodb_user`         | **ASSIGNED**          | `mongodb_role`        |

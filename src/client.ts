@@ -11,6 +11,7 @@ import {
   OrganizationTeam,
   User,
   ProjectTeam,
+  ApiKey,
 } from './types';
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
@@ -100,6 +101,17 @@ export class APIClient {
     await Promise.all(users.results.map(iterator));
   }
 
+  public async fetchUsersForProject(
+    projectId: string,
+    iterator: ResourceIteratee<User>,
+  ): Promise<void> {
+    const users = await this._wrapWithErrorHandling(
+      `/groups/${projectId}/users`,
+    );
+
+    await Promise.all(users.results.map(iterator));
+  }
+
   public async fetchTeamsForOrganization(
     orgId: string,
     iterator: ResourceIteratee<OrganizationTeam>,
@@ -119,6 +131,18 @@ export class APIClient {
 
     await Promise.all(teams.results.map(iterator));
   }
+
+  public async fetchApiKeysForOrganization(
+    organizationId: string,
+    iterator: ResourceIteratee<ApiKey>,
+  ): Promise<void> {
+    const apiKeys = await this._wrapWithErrorHandling(
+      `/orgs/${organizationId}/apiKeys`,
+    );
+
+    await Promise.all(apiKeys.results.map(iterator));
+  }
+
   private async _wrapWithErrorHandling(endpoint: string): Promise<any> {
     const response = await this._digestClient.fetch(
       `${this._baseUrl}${endpoint}`,

@@ -4,31 +4,21 @@ import {
   StepRelationshipMetadata,
 } from '@jupiterone/integration-sdk-core';
 
-export const Steps: Record<
-  | 'FETCH_ORGANIZATIONS'
-  | 'FETCH_PROJECTS'
-  | 'FETCH_CLUSTERS'
-  | 'FETCH_USERS'
-  | 'FETCH_TEAMS'
-  | 'FETCH_KEYS'
-  | 'CREATE_ROLES_FROM_USERS'
-  | 'CREATE_ROLES_FROM_TEAMS',
-  string
-> = {
+export const Steps = {
   FETCH_ORGANIZATIONS: 'fetch-organizations',
   FETCH_PROJECTS: 'fetch-projects',
   FETCH_CLUSTERS: 'fetch-clusters',
   FETCH_USERS: 'fetch-users',
   FETCH_TEAMS: 'fetch-teams',
-  FETCH_KEYS: 'fetch-keys',
-  CREATE_ROLES_FROM_USERS: 'create-roles-from-users',
-  CREATE_ROLES_FROM_TEAMS: 'create-roles-from-teams',
-};
+  FETCH_API_KEYS: 'fetch-api-keys',
+  FETCH_USER_ROLES: 'fetch-user-roles',
+  FETCH_TEAM_ROLES: 'fetch-team-roles',
+  FETCH_API_KEY_ROLES: 'fetch-api-key-roles',
+  RELATE_ROLES_TO_PROJECTS: 'relate-roles-to-projects',
+  RELATE_USERS_TO_PROJECTS: 'relate-users-to-projects',
+} satisfies Record<string, `fetch-${string}` | `relate-${string}-to-${string}`>;
 
-export const Entities: Record<
-  'ORGANIZATION' | 'PROJECT' | 'CLUSTER' | 'USER' | 'TEAM' | 'ROLE' | 'KEY',
-  StepEntityMetadata
-> = {
+export const Entities = {
   ORGANIZATION: {
     resourceName: 'Organization',
     _type: 'mongodb_organization',
@@ -59,29 +49,14 @@ export const Entities: Record<
     _type: 'mongodb_role',
     _class: ['AccessRole'],
   },
-  KEY: {
-    resourceName: 'Key',
-    _type: 'mongodb_key',
+  API_KEY: {
+    resourceName: 'API Key',
+    _type: 'mongodb_api_key',
     _class: ['AccessKey'],
   },
-};
+} satisfies Record<string, StepEntityMetadata>;
 
-export const Relationships: Record<
-  | 'ORGANIZATION_HAS_USER'
-  | 'ORGANIZATION_HAS_PROJECT'
-  | 'ORGANIZATION_HAS_TEAM'
-  | 'ORGANIZATION_ASSIGNED_KEY'
-  | 'TEAM_HAS_USER'
-  | 'TEAM_HAS_ROLE'
-  | 'PROJECT_HAS_CLUSTER'
-  | 'PROJECT_HAS_TEAM'
-  | 'PROJECT_HAS_USER'
-  | 'PROJECT_OWNS_ROLE'
-  | 'PROJECT_ASSIGNED_KEY'
-  | 'USER_ASSIGNED_ROLE'
-  | 'KEY_HAS_ROLE',
-  StepRelationshipMetadata
-> = {
+export const Relationships = {
   ORGANIZATION_HAS_USER: {
     sourceType: Entities.ORGANIZATION._type,
     targetType: Entities.USER._type,
@@ -100,11 +75,11 @@ export const Relationships: Record<
     _type: 'mongodb_organization_has_team',
     _class: RelationshipClass.HAS,
   },
-  ORGANIZATION_ASSIGNED_KEY: {
+  ORGANIZATION_HAS_API_KEY: {
     sourceType: Entities.ORGANIZATION._type,
-    targetType: Entities.KEY._type,
-    _type: 'mongodb_organization_assigned_key',
-    _class: RelationshipClass.ASSIGNED,
+    targetType: Entities.API_KEY._type,
+    _type: 'mongodb_organization_has_api_key',
+    _class: RelationshipClass.HAS,
   },
   TEAM_HAS_USER: {
     sourceType: Entities.TEAM._type,
@@ -142,11 +117,11 @@ export const Relationships: Record<
     _type: 'mongodb_project_owns_role',
     _class: RelationshipClass.OWNS,
   },
-  PROJECT_ASSIGNED_KEY: {
+  PROJECT_HAS_API_KEY: {
     sourceType: Entities.PROJECT._type,
-    targetType: Entities.KEY._type,
-    _type: 'mongodb_project_assigned_key',
-    _class: RelationshipClass.ASSIGNED,
+    targetType: Entities.API_KEY._type,
+    _type: 'mongodb_project_has_api_key',
+    _class: RelationshipClass.HAS,
   },
   USER_ASSIGNED_ROLE: {
     sourceType: Entities.USER._type,
@@ -154,10 +129,10 @@ export const Relationships: Record<
     _type: 'mongodb_user_assigned_role',
     _class: RelationshipClass.ASSIGNED,
   },
-  KEY_HAS_ROLE: {
-    sourceType: Entities.KEY._type,
+  API_KEY_HAS_ROLE: {
+    sourceType: Entities.API_KEY._type,
     targetType: Entities.ROLE._type,
-    _type: 'mongodb_key_has_role',
+    _type: 'mongodb_api_key_has_role',
     _class: RelationshipClass.HAS,
   },
-};
+} satisfies Record<string, StepRelationshipMetadata>;

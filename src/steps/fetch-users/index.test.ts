@@ -31,9 +31,7 @@ describe('Fetch users step', () => {
     expect(stepResult).toMatchStepMetadata(stepConfig);
   });
   test('creates roles for users correctly', async () => {
-    const stepConfig = buildStepTestConfigForStep(
-      Steps.CREATE_ROLES_FROM_USERS,
-    );
+    const stepConfig = buildStepTestConfigForStep(Steps.FETCH_USER_ROLES);
     const stepResult = await executeStepWithDependencies(stepConfig);
     expect(stepResult).toMatchStepMetadata(stepConfig);
   });

@@ -2,7 +2,7 @@ import { getIdForRole } from './converter';
 
 describe('getIdFromRole', () => {
   test('should return an object with an unknown scope and empty id if an empty object is passed in', () => {
-    expect(getIdForRole({})).toEqual({
+    expect(getIdForRole({} as any)).toEqual({
       scopeName: 'unknown',
       id: 'unknown:unknown',
     });
