@@ -1,16 +1,57 @@
 ---
-sourceId: managed:mongo-db
+sourceId: managed:mongodb
 integrationDefinitionId: '${integration_definition_id}'
 questions:
-  []
-  # - id: integration-question-template-replace-me
-  #   title: What kinds of questions will this integration support?
-  #   description:
-  #     TODO Every integration should contribute questions! Please be careful
-  #     to replace this before deploying the integration to JupiterOne.
-  #   queries:
-  #     - name: good
-  #       query: |
-  #         find * with _integrationDefinitionId = '${integration_definition_id}'
-  #   tags:
-  #     - template
+  - id: mongodb-api-key-count
+    title: How many MongoDB API Keys do we have?
+    description:
+      Return a count of all MongoDB API Keys.
+    queries:
+      - query: |
+          FIND mongodb_api_key RETURN count(mongodb_api_key)
+    tags:
+      - mongodb 
+      - account
+  - id: mongodb-production-project-user-access
+    title: How many users have access to our production MongoDB project?
+    description:
+      Return a count of all users that have access to our production MongoDB project.
+    queries:
+      - query: |
+           FIND mongodb_user THAT HAS << mongodb_project WITH tag.Production = true RETURN count(mongodb_user)
+    tags:
+      - mongodb 
+      - production
+      - access 
+  - id: mongodb-api-key-related-entities
+    title: Which entities are related to provisioned MongoDB API Keys?
+    description:
+      Return a list of all entities that are related to provisioned MongoDB API Keys.
+    queries:
+      - query: |
+           FIND mongodb_api_key THAT RELATES TO * RETURN TREE
+    tags:
+      - mongodb 
+  - id: mongodb-person-user-account
+    title: Which people have MongoDB user accounts?
+    description:
+      Return a list of all people that have MongoDB user accounts.
+    queries:
+      - query: |
+           FIND Person THAT IS << mongodb_user
+    tags:
+      - mongodb 
+      - user
+      - account
+  - id: mongodb-production-project-related-entities
+    title: Which entities are related to Production MongoDB Projects?
+    description:
+      Return a list of all entities that are related to Production MongoDB Projects.
+    queries:
+      - query: |
+           FIND mongodb_project WITH tag.Production = true THAT RELATES TO * RETURN TREE
+    tags:
+      - mongodb 
+      - production
+     
+    
