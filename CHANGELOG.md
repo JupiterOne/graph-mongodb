@@ -1,3 +1,15 @@
+# v0.1.3 (Wed Oct 11 2023)
+
+#### 🐛 Bug Fix
+
+- Changed label field [#14](https://github.com/JupiterOne/graph-mongodb/pull/14) (gonzaloavalosribas@Gonzalos-MacBook-Pro.local)
+
+#### Authors: 1
+
+- Gonzalo Avalos Ribas ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+---
+
 # v0.1.1 (Thu Sep 21 2023)
 
 #### 🐛 Bug Fix
