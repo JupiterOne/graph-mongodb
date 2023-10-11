@@ -31,7 +31,10 @@ export type Project = {
   created: string;
   links: MongoDBLink[];
 };
-
+type KeyValue = {
+  key: string;
+  value: string;
+};
 export type Cluster = {
   backupEnabled: boolean;
   biConnector: {
@@ -48,7 +51,7 @@ export type Cluster = {
   encryptionAtRestProvider: string;
   groupId: string;
   id: string;
-  labels: string[];
+  labels: KeyValue[];
   mongoDBMajorVersion: string;
   mongoDBVersion: string;
   name: string;

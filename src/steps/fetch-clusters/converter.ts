@@ -20,7 +20,9 @@ export const createClusterEntity = (cluster: Cluster): Entity => {
         name: cluster.name,
         displayName: cluster.name,
         projectId: cluster.groupId,
-        labels: cluster.labels,
+        labels: cluster.labels.map(
+          (element) => `${element.key}:${element.value}`,
+        ),
         mongoDBVersion: cluster.mongoDBVersion,
         paused: cluster.paused,
         pitEnabled: cluster.pitEnabled,
