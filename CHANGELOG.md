@@ -1,3 +1,15 @@
+# v0.1.4 (Wed Oct 11 2023)
+
+#### 🐛 Bug Fix
+
+- INT-9801 - Assign labels and tags instead of treating as properties [#15](https://github.com/JupiterOne/graph-mongodb/pull/15) ([@jzolo22](https://github.com/jzolo22))
+
+#### Authors: 1
+
+- Julia Zolotarev ([@jzolo22](https://github.com/jzolo22))
+
+---
+
 # v0.1.3 (Wed Oct 11 2023)
 
 #### 🐛 Bug Fix
