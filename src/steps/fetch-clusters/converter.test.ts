@@ -19,7 +19,12 @@ describe('createClusterEntity', () => {
     encryptionAtRestProvider: 'NONE',
     groupId: '729347',
     id: '209849',
-    labels: [],
+    labels: [
+      {
+        key: 'environment',
+        value: 'production',
+      },
+    ],
     mongoDBMajorVersion: '6.0',
     mongoDBVersion: '6.0.9',
     name: 'Cluster0',
@@ -45,16 +50,30 @@ describe('createClusterEntity', () => {
     ],
     rootCertType: 'ISRGROOTX1',
     stateName: 'IDLE',
-    tags: [],
+    tags: [
+      {
+        key: 'application',
+        value: 'jupiterone',
+      },
+    ],
     terminationProtectionEnabled: false,
     versionReleaseSystem: 'LTS',
   };
   test('creates a cluster integration entity', () => {
-    expect(createClusterEntity(mockCluster)).toEqual(
+    const mockClusterEntity = createClusterEntity(mockCluster);
+    expect(mockClusterEntity).toEqual(
       expect.objectContaining({
         _class: ['Cluster'],
         _key: 'mongodb_cluster:209849',
         _type: 'mongodb_cluster',
+      }),
+    );
+
+    // the values in these properties will be used to actually tag the entities in J1, rather than applied as properties
+    expect(mockClusterEntity).toEqual(
+      expect.not.objectContaining({
+        tags: expect.anything(),
+        labels: expect.anything(),
       }),
     );
   });

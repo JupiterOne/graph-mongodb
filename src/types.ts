@@ -1,3 +1,5 @@
+import { ResourceTagList } from '@jupiterone/integration-sdk-core';
+
 type MongoDBLink = {
   href: string;
   rel: string;
@@ -31,10 +33,7 @@ export type Project = {
   created: string;
   links: MongoDBLink[];
 };
-type KeyValue = {
-  key: string;
-  value: string;
-};
+
 export type Cluster = {
   backupEnabled: boolean;
   biConnector: {
@@ -51,7 +50,7 @@ export type Cluster = {
   encryptionAtRestProvider: string;
   groupId: string;
   id: string;
-  labels: KeyValue[];
+  labels: ResourceTagList;
   mongoDBMajorVersion: string;
   mongoDBVersion: string;
   name: string;
@@ -77,7 +76,7 @@ export type Cluster = {
   ];
   rootCertType: string;
   stateName: string;
-  tags: string[];
+  tags: ResourceTagList;
   terminationProtectionEnabled: boolean;
   versionReleaseSystem: string;
 };
