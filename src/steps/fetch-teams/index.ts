@@ -1,4 +1,5 @@
 import {
+  IntegrationProviderAPIError,
   IntegrationStep,
   IntegrationStepExecutionContext,
   createDirectRelationship,
@@ -70,78 +71,93 @@ export async function createAndRelateRolesFromProjectTeams({
   const client = createAPIClient(config);
 
   await jobState.iterateEntities(Entities.PROJECT, async (projectEntity) => {
-    // for each project, get the teams
-    await client.iterateTeamsForProject(
-      projectEntity.id as string,
-      async (team) => {
-        const roles = team.roleNames;
-        // Since teams have already been created from orgs, get the original team entity
-        const teamEntity = await jobState.findEntity(
-          createEntityKey(Entities.TEAM, team.teamId),
-        );
+    try {
+      // for each project, get the teams
+      await client.iterateTeamsForProject(
+        projectEntity.id as string,
+        async (team) => {
+          const roles = team.roleNames;
+          // Since teams have already been created from orgs, get the original team entity
+          const teamEntity = await jobState.findEntity(
+            createEntityKey(Entities.TEAM, team.teamId),
+          );
 
-        await Promise.all(
-          roles.map(async (roleName) => {
-            // Check to see if a role entity already exists because it was created from a user
-            const { id: roleId } = getIdForRole(
-              { roleName },
-              { scopeName: 'project', scopeId: projectEntity.id as string },
-            );
-            let roleEntity = await jobState.findEntity(
-              createEntityKey(Entities.ROLE, roleId),
-            );
-
-            if (!roleEntity) {
-              // Create role entities based on team's roles
-              roleEntity = await jobState.addEntity(
-                createRoleEntity(
-                  { roleName },
-                  // Teams only have project level roles, they don't have organization level roles
-                  { scopeName: 'project', scopeId: projectEntity.id as string },
-                ),
+          await Promise.all(
+            roles.map(async (roleName) => {
+              // Check to see if a role entity already exists because it was created from a user
+              const { id: roleId } = getIdForRole(
+                { roleName },
+                { scopeName: 'project', scopeId: projectEntity.id as string },
               );
-            }
-
-            // If the team entity exists, relate it to the role
-            if (teamEntity) {
-              await jobState.addRelationship(
-                createDirectRelationship({
-                  from: teamEntity,
-                  to: roleEntity,
-                  _class: Relationships.TEAM_HAS_ROLE._class,
-                }),
+              let roleEntity = await jobState.findEntity(
+                createEntityKey(Entities.ROLE, roleId),
               );
-            } else {
-              logger.warn(
-                'A team was not found for this role; skipping relationship creation',
-                {
-                  roleName,
-                  teamId: team.teamId,
-                },
-              );
-            }
-          }),
-        );
 
-        // Finally, if the team exists, relate it to the project
-        if (teamEntity) {
-          await jobState.addRelationship(
-            createDirectRelationship({
-              from: projectEntity,
-              to: teamEntity,
-              _class: Relationships.PROJECT_HAS_TEAM._class,
+              if (!roleEntity) {
+                // Create role entities based on team's roles
+                roleEntity = await jobState.addEntity(
+                  createRoleEntity(
+                    { roleName },
+                    // Teams only have project level roles, they don't have organization level roles
+                    {
+                      scopeName: 'project',
+                      scopeId: projectEntity.id as string,
+                    },
+                  ),
+                );
+              }
+
+              // If the team entity exists, relate it to the role
+              if (teamEntity) {
+                await jobState.addRelationship(
+                  createDirectRelationship({
+                    from: teamEntity,
+                    to: roleEntity,
+                    _class: Relationships.TEAM_HAS_ROLE._class,
+                  }),
+                );
+              } else {
+                logger.warn(
+                  'A team was not found for this role; skipping relationship creation',
+                  {
+                    roleName,
+                    teamId: team.teamId,
+                  },
+                );
+              }
             }),
           );
-        } else {
-          logger.warn(
-            'A team was not found for this project; skipping relationship creation',
-            {
-              projectId: projectEntity.id,
-              projectName: projectEntity.name,
-            },
-          );
-        }
-      },
-    );
+
+          // Finally, if the team exists, relate it to the project
+          if (teamEntity) {
+            await jobState.addRelationship(
+              createDirectRelationship({
+                from: projectEntity,
+                to: teamEntity,
+                _class: Relationships.PROJECT_HAS_TEAM._class,
+              }),
+            );
+          } else {
+            logger.warn(
+              'A team was not found for this project; skipping relationship creation',
+              {
+                projectId: projectEntity.id,
+                projectName: projectEntity.name,
+              },
+            );
+          }
+        },
+      );
+    } catch (err) {
+      if (err instanceof IntegrationProviderAPIError && err.status == 404) {
+        logger.warn(
+          err,
+          `Project (Group) with ID ${projectEntity.id} was not found.`,
+        );
+        return;
+      }
+
+      throw err;
+    }
   });
 }

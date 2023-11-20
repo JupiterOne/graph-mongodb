@@ -1,4 +1,5 @@
 import {
+  IntegrationProviderAPIError,
   IntegrationStep,
   IntegrationStepExecutionContext,
   createDirectRelationship,
@@ -30,20 +31,32 @@ export async function fetchClusters({
   const client = createAPIClient(config);
 
   await jobState.iterateEntities(Entities.PROJECT, async (projectEntity) => {
-    await client.iterateClustersForProject(
-      projectEntity.id as string,
-      async (cluster) => {
-        const clusterEntity = await jobState.addEntity(
-          createClusterEntity(cluster),
+    try {
+      await client.iterateClustersForProject(
+        projectEntity.id as string,
+        async (cluster) => {
+          const clusterEntity = await jobState.addEntity(
+            createClusterEntity(cluster),
+          );
+          await jobState.addRelationship(
+            createDirectRelationship({
+              _class: Relationships.PROJECT_HAS_CLUSTER._class,
+              from: projectEntity,
+              to: clusterEntity,
+            }),
+          );
+        },
+      );
+    } catch (err) {
+      if (err instanceof IntegrationProviderAPIError && err.status == 404) {
+        logger.warn(
+          err,
+          `Project (Group) with ID ${projectEntity.id} was not found.`,
         );
-        await jobState.addRelationship(
-          createDirectRelationship({
-            _class: Relationships.PROJECT_HAS_CLUSTER._class,
-            from: projectEntity,
-            to: clusterEntity,
-          }),
-        );
-      },
-    );
+        return;
+      }
+
+      throw err;
+    }
   });
 }
