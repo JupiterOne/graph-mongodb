@@ -1,3 +1,20 @@
+# v0.1.5 (Mon Nov 20 2023)
+
+#### 🐛 Bug Fix
+
+- INT-9962: fix GROUP_NOT_FOUND issue [#16](https://github.com/JupiterOne/graph-mongodb/pull/16) ([@gastonyelmini](https://github.com/gastonyelmini))
+
+#### ⚠️ Pushed to `main`
+
+- Populate CODEOWENRS, baseline package.json and baseline cortex.yaml ([@jablonnc](https://github.com/jablonnc))
+
+#### Authors: 2
+
+- Gaston Yelmini ([@gastonyelmini](https://github.com/gastonyelmini))
+- Noah Jablonski ([@jablonnc](https://github.com/jablonnc))
+
+---
+
 # v0.1.4 (Wed Oct 11 2023)
 
 #### 🐛 Bug Fix
