@@ -1,4 +1,5 @@
 import {
+  IntegrationProviderAPIError,
   IntegrationStep,
   IntegrationStepExecutionContext,
   createDirectRelationship,
@@ -85,32 +86,44 @@ export async function relateUsersToProjects({
   const client = createAPIClient(config);
 
   await jobState.iterateEntities(Entities.PROJECT, async (projectEntity) => {
-    await client.iterateUsersForProject(
-      projectEntity.id as string,
-      async (user) => {
-        const userEntity = await jobState.findEntity(
-          createEntityKey(Entities.USER, user.id),
-        );
+    try {
+      await client.iterateUsersForProject(
+        projectEntity.id as string,
+        async (user) => {
+          const userEntity = await jobState.findEntity(
+            createEntityKey(Entities.USER, user.id),
+          );
 
-        if (userEntity) {
-          await jobState.addRelationship(
-            createDirectRelationship({
-              from: projectEntity,
-              to: userEntity,
-              _class: Relationships.PROJECT_HAS_USER._class,
-            }),
-          );
-        } else {
-          logger.warn(
-            `A user with id ${user.id} was not found; skipping relationship creation to project`,
-            {
-              userId: user.id,
-              projectId: projectEntity.id,
-            },
-          );
-        }
-      },
-    );
+          if (userEntity) {
+            await jobState.addRelationship(
+              createDirectRelationship({
+                from: projectEntity,
+                to: userEntity,
+                _class: Relationships.PROJECT_HAS_USER._class,
+              }),
+            );
+          } else {
+            logger.warn(
+              `A user with id ${user.id} was not found; skipping relationship creation to project`,
+              {
+                userId: user.id,
+                projectId: projectEntity.id,
+              },
+            );
+          }
+        },
+      );
+    } catch (err) {
+      if (err instanceof IntegrationProviderAPIError && err.status == 404) {
+        logger.warn(
+          err,
+          `Project (Group) with ID ${projectEntity.id} was not found.`,
+        );
+        return;
+      }
+
+      throw err;
+    }
   });
 }
 
